@@ -27,10 +27,10 @@ app.get("/users", (req, res) => {
 });
 
 app.get("/users/:id", (req, res) => {
-    let user = users.find(el => {
-        const id = req.params.id;
-        return el.id === parseInt(id);
-    });
+    const { id } = req.params;
+
+    const user = users.find((el) => el.id === parseInt(id));
+    
     res.send(user);
 });
 
