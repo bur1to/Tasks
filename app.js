@@ -48,13 +48,11 @@ app.post("/users", (req, res) => {
 });
 
 app.put("/users/:id", (req, res) => {
+    const { id } = req.params;
     const userName = req.body.name;
     const userAge = req.body.age;
 
-    let index = users.findIndex(el => {
-        const id = req.params.id;
-        return el.id === parseInt(id);
-    });
+    let index = users.findIndex((el) => el.id === parseInt(id));
 
     if(index >= 0){
         const user = users[index];
@@ -67,10 +65,9 @@ app.put("/users/:id", (req, res) => {
 });
 
 app.delete("/users/:id", (req, res) => {
-    let index = users.findIndex(el => {
-        const id = req.params.id;
-        return el.id === parseInt(id);
-    });
+    const { id } = req.params;
+
+    let index = users.findIndex((el) => el.id === parseInt(id));
 
     if(index >= 0){
         let user = users[index];
