@@ -11,11 +11,8 @@ mongoose.connect("mongodb://localhost:27017/testDb", {useNewUrlParser: true, use
 
 const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    name:{
-        name: String,
-        firstName: String,
-        lastName: String
-    },
+    firstName: String,
+    lastName: String,
     age: Number
 });
 
