@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const User = require("./user.js");
 const express = require("express");
 const app = express();
 
@@ -9,12 +10,8 @@ mongoose.connect("mongodb://localhost:27017/testDb", {useNewUrlParser: true, use
 .then(() => console.log("MongoDB succesfully connected"))
 .catch((err) => console.log(err));
 
-const userSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    firstName: String,
-    lastName: String,
-    age: Number
-});
+let user = new User({firstName: "Tom", lastName: "Cruise", age: 18});
+console.log(user);
 
 // const users = [
 //     {
