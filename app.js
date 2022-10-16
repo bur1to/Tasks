@@ -10,84 +10,70 @@ mongoose.connect("mongodb://localhost:27017/testDb", {useNewUrlParser: true, use
 .then(() => console.log("MongoDB succesfully connected"))
 .catch((err) => console.log(err));
 
-let user = new User({firstName: "Tom", lastName: "Cruise", age: 18});
-console.log(user);
-
-// const users = [
-//     {
-//         id: 1, 
-//         name: "Tom",
-//         age: "18"
-//     },
-//     {
-//         id: 2,
-//         name: "Kolya",
-//         age: "90"
-//     },
-//     {
-//         id: 3,
-//         name: "Volodya",
-//         age: "37"
-//     }
-// ];
+const db = mongoose.connection;
+const collection = db.collection("user");
 
 app.get("/users", (req, res) => {
-    res.send(users);
+    collection.find().toArray((err, result) => {
+        if(err) console.log(err);
+        res.send(result);
+    });
 });
 
 app.get("/users/:id", (req, res) => {
     const { id } = req.params;
 
-    const user = users.find((el) => el.id === parseInt(id));
-    
-    res.send(user);
+    User.findOne({_id: id}, (err, result) => {
+        if(err){
+            console.log(err);
+        }
+
+        res.send(result);
+    });
 });
 
 app.post("/users", (req, res) => {
     if(!req.body) return res.sendStatus(400);
 
     console.log(req.body);
-    let user = {
-        id: users.length+1,
-        name: req.body.name,
-        age: req.body.age
-    }
-    users.push(user);
-    res.send(users);
+    let user = new User({firstName: req.body.firstName, lastName: req.body.lastName, age: req.body.age});
+
+    user.save((err, user) => {
+        if(err){
+            console.log(err);
+        }
+
+        console.log("user saved", user);
+    });
+
+    res.send(user);
 });
 
 app.put("/users/:id", (req, res) => {
-    const userName = req.body.name;
+    const {id} = req.params;
+    const userFirstName = req.body.firstName;
+    const userLastName = req.body.lastName;
     const userAge = req.body.age;
 
-    let index = users.findIndex(el => {
-        const id = req.params.id;
-        return el.id === parseInt(id);
-    });
+    const newUser = {firstName: userFirstName, lastName: userLastName, age: userAge};
 
-    if(index >= 0){
-        const user = users[index];
-        user.name = userName;
-        user.age = userAge;
-        return res.send(user);
-    }
-    
-    res.sendStatus(404);
+    User.findByIdAndUpdate({_id: id}, newUser, {new: true},(err, result) => {
+        if(err) console.log(err);
+
+        res.send(result);
+    });
 });
 
 app.delete("/users/:id", (req, res) => {
-    let index = users.findIndex(el => {
-        const id = req.params.id;
-        return el.id === parseInt(id);
-    });
+    const {id} = req.params;
 
-    if(index >= 0){
-        let user = users[index];
-        users.splice(index, 1);
-        return res.send(user);
-    } 
-    
-    res.sendStatus(404);
+    User.deleteOne({_id: id}, (err, result) => {
+        if(err){
+            console.log(err);
+        }
+
+        res.send(result);
+    });
 });
 
 app.listen(3000, () => {
