@@ -3,6 +3,7 @@ const User = require("./user.js");
 const express = require("express");
 const app = express();
 
+
 app.use(express.json());
 app.use(express.urlencoded());
 
@@ -19,7 +20,7 @@ app.get("/users", (req, res) => {
 });
 
 app.get("/users/:id", (req, res) => {
-    const { id } = req.params;
+    const {id} = req.params;
 
     User.findOne({_id: id}, (err, result) => {
         if(err){
