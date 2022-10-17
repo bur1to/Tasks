@@ -10,12 +10,10 @@ mongoose.connect("mongodb://localhost:27017/testDb", {useNewUrlParser: true, use
 .then(() => console.log("MongoDB succesfully connected"))
 .catch((err) => console.log(err));
 
-const db = mongoose.connection;
-const collection = db.collection("user");
-
 app.get("/users", (req, res) => {
-    collection.find().toArray((err, result) => {
+    User.find((err, result) => {
         if(err) console.log(err);
+
         res.send(result);
     });
 });
