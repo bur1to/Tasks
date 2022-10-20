@@ -36,17 +36,15 @@ app.post("/users", (req, res) => {
         return res.sendStatus(400);
     }
     
-    const {firstName} = req.body;
-    const {lastName} = req.body;
-    const {age} = req.body;
+    const {firstName, lastName, age} = req.body;
 
     const {error} = userValidation(req.body);
 
     if(error){ 
-        return res.sendStatus(400);
+        return res.status(400).send(error);
     }
 
-    let user = new User({firstName: firstName, lastName: lastName, age: age});
+    let user = new User({firstName, lastName, age});
 
     user.save((err, user) => {
         if(err){
@@ -61,17 +59,15 @@ app.post("/users", (req, res) => {
 
 app.put("/users/:id", (req, res) => {
     const {id} = req.params;
-    const {firstName} = req.body;
-    const {lastName} = req.body;
-    const {age} = req.body;
+    const {firstName, lastName, age} = req.body;
 
     const {error} = userValidation(req.body);
     
     if(error){
-        return res.sendStatus(400);
+        return res.status(400).send(error);
     }
 
-    const newUser = {firstName: firstName, lastName: lastName, age: age};
+    const newUser = {firstName, lastName, age};
 
     User.findByIdAndUpdate({_id: id}, newUser, {new: true},(err, result) => {
         if(err) console.log(err);
