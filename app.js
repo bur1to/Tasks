@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const User = require("./user.js");
+const User = require("./model/user.js");
+const {userValidation} = require("./validations/dataValidation.js");
 const express = require("express");
 const app = express();
-
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -32,10 +32,21 @@ app.get("/users/:id", (req, res) => {
 });
 
 app.post("/users", (req, res) => {
-    if(!req.body) return res.sendStatus(400);
+    if(!req.body){
+        return res.sendStatus(400);
+    }
+    
+    const {firstName} = req.body;
+    const {lastName} = req.body;
+    const {age} = req.body;
 
-    console.log(req.body);
-    let user = new User({firstName: req.body.firstName, lastName: req.body.lastName, age: req.body.age});
+    const {error} = userValidation(req.body);
+
+    if(error){ 
+        return res.sendStatus(400);
+    }
+
+    let user = new User({firstName: firstName, lastName: lastName, age: age});
 
     user.save((err, user) => {
         if(err){
@@ -50,11 +61,17 @@ app.post("/users", (req, res) => {
 
 app.put("/users/:id", (req, res) => {
     const {id} = req.params;
-    const userFirstName = req.body.firstName;
-    const userLastName = req.body.lastName;
-    const userAge = req.body.age;
+    const {firstName} = req.body;
+    const {lastName} = req.body;
+    const {age} = req.body;
 
-    const newUser = {firstName: userFirstName, lastName: userLastName, age: userAge};
+    const {error} = userValidation(req.body);
+    
+    if(error){
+        return res.sendStatus(400);
+    }
+
+    const newUser = {firstName: firstName, lastName: lastName, age: age};
 
     User.findByIdAndUpdate({_id: id}, newUser, {new: true},(err, result) => {
         if(err) console.log(err);
