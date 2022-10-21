@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const User = require("./model/user.js");
+const User = require("./models/user.js");
 const {userValidation} = require("./validations/dataValidation.js");
 const express = require("express");
 const app = express();
@@ -35,12 +35,12 @@ app.post("/users", (req, res) => {
     if(!req.body){
         return res.sendStatus(400);
     }
-    
+
     const {firstName, lastName, age} = req.body;
 
     const {error} = userValidation(req.body);
 
-    if(error){ 
+    if(error){
         return res.status(400).send(error);
     }
 
@@ -62,7 +62,7 @@ app.put("/users/:id", (req, res) => {
     const {firstName, lastName, age} = req.body;
 
     const {error} = userValidation(req.body);
-    
+
     if(error){
         return res.status(400).send(error);
     }
