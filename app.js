@@ -38,14 +38,14 @@ app.post("/users", (req, res) => {
 
     const {body} = req;
 
-    const {error, value: addingParams} = userValidation(body);
+    const {error, value: createParams} = userValidation(body);
 
     if(error){
       res.status(400).send(error);
     }
 
 
-    let user = new User(addingParams);
+    let user = new User(createParams);
 
     user.save((err, user) => {
         if(err){
@@ -68,7 +68,7 @@ app.put("/users/:id", (req, res) => {
       res.status(400).send(error);
     }
 
-    User.findByIdAndUpdate({_id: id}, updateParams, {new: true},(err, result) => {
+    User.findByIdAndUpdate(id, updateParams, {new: true},(err, result) => {
         if(err) console.log(err);
 
         res.send(result);
