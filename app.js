@@ -12,15 +12,17 @@ mongoose.connect("mongodb://localhost:27017/testDb", {useNewUrlParser: true, use
 .catch((err) => console.log(err));
 
 app.get("/users", (req, res) => {
-    User.find()
-    .then((data) => res.send(data));
+    return User.find()
+    .then((data) => res.send(data))
+    .catch((err) => res.status(500).send(err));
 });
 
 app.get("/users/:id", (req, res) => {
     const {id} = req.params;
 
     User.findOne({_id: id})
-    .then((data) => res.send(data));
+    .then((data) => res.send(data))
+    .catch((err) => res.status(500).send(err));
 });
 
 app.post("/users", (req, res) => {
@@ -40,7 +42,8 @@ app.post("/users", (req, res) => {
     let user = new User(createParams);
 
     user.save()
-    .then(() => console.log("User saved"));
+    .then(() => console.log("User saved"))
+    .catch((err) => res.status(500).send(err));
 
     res.send(user);
 });
@@ -56,14 +59,16 @@ app.put("/users/:id", (req, res) => {
     }
 
     User.findByIdAndUpdate(id, updateParams, {new: true})
-    .then((data) => res.send(data));
+    .then((data) => res.send(data))
+    .catch((err) => res.status(500).send(err));
 });
 
 app.delete("/users/:id", (req, res) => {
     const {id} = req.params;
 
     User.deleteOne({_id: id})
-    .then((deleted) => res.send(deleted));
+    .then((deleted) => res.send(deleted))
+    .catch((err) => res.status(500).send(err));
 });
 
 app.listen(3000, () => {
