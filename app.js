@@ -12,23 +12,15 @@ mongoose.connect("mongodb://localhost:27017/testDb", {useNewUrlParser: true, use
 .catch((err) => console.log(err));
 
 app.get("/users", (req, res) => {
-    User.find((err, result) => {
-        if(err) console.log(err);
-
-        res.send(result);
-    });
+    User.find()
+    .then((data) => res.send(data));
 });
 
 app.get("/users/:id", (req, res) => {
     const {id} = req.params;
 
-    User.findOne({_id: id}, (err, result) => {
-        if(err){
-            console.log(err);
-        }
-
-        res.send(result);
-    });
+    User.findOne({_id: id})
+    .then((data) => res.send(data));
 });
 
 app.post("/users", (req, res) => {
@@ -47,13 +39,8 @@ app.post("/users", (req, res) => {
 
     let user = new User(createParams);
 
-    user.save((err, user) => {
-        if(err){
-            console.log(err);
-        }
-
-        console.log("user saved", user);
-    });
+    user.save()
+    .then(() => console.log("User saved"));
 
     res.send(user);
 });
@@ -68,23 +55,15 @@ app.put("/users/:id", (req, res) => {
       res.status(400).send(error);
     }
 
-    User.findByIdAndUpdate(id, updateParams, {new: true},(err, result) => {
-        if(err) console.log(err);
-
-        res.send(result);
-    });
+    User.findByIdAndUpdate(id, updateParams, {new: true})
+    .then((data) => res.send(data));
 });
 
 app.delete("/users/:id", (req, res) => {
     const {id} = req.params;
 
-    User.deleteOne({_id: id}, (err, result) => {
-        if(err){
-            console.log(err);
-        }
-
-        res.send(result);
-    });
+    User.deleteOne({_id: id})
+    .then((deleted) => res.send(deleted));
 });
 
 app.listen(3000, () => {
