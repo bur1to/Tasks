@@ -20,7 +20,7 @@ app.get("/users", (req, res) => {
 app.get("/users/:id", (req, res) => {
     const {id} = req.params;
 
-    User.findOne({_id: id})
+   return User.findOne({_id: id})
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send(err));
 });
@@ -41,11 +41,12 @@ app.post("/users", (req, res) => {
 
     let user = new User(createParams);
 
-    user.save()
-    .then(() => console.log("User saved"))
+    return user.save()
+    .then(() => {
+      console.log("User saved");
+      res.send(user);
+    })
     .catch((err) => res.status(500).send(err));
-
-    res.send(user);
 });
 
 app.put("/users/:id", (req, res) => {
@@ -58,7 +59,7 @@ app.put("/users/:id", (req, res) => {
       res.status(400).send(error);
     }
 
-    User.findByIdAndUpdate(id, updateParams, {new: true})
+    return User.findByIdAndUpdate(id, updateParams, {new: true})
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send(err));
 });
@@ -66,7 +67,7 @@ app.put("/users/:id", (req, res) => {
 app.delete("/users/:id", (req, res) => {
     const {id} = req.params;
 
-    User.deleteOne({_id: id})
+    return User.deleteOne({_id: id})
     .then((deleted) => res.send(deleted))
     .catch((err) => res.status(500).send(err));
 });
