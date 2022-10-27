@@ -12,23 +12,17 @@ mongoose.connect("mongodb://localhost:27017/testDb", {useNewUrlParser: true, use
 .catch((err) => console.log(err));
 
 app.get("/users", (req, res) => {
-    User.find((err, result) => {
-        if(err) console.log(err);
-
-        res.send(result);
-    });
+    return User.find()
+    .then((data) => res.send(data))
+    .catch((err) => res.status(500).send(err));
 });
 
 app.get("/users/:id", (req, res) => {
     const {id} = req.params;
 
-    User.findOne({_id: id}, (err, result) => {
-        if(err){
-            console.log(err);
-        }
-
-        res.send(result);
-    });
+   return User.findOne({_id: id})
+    .then((data) => res.send(data))
+    .catch((err) => res.status(500).send(err));
 });
 
 app.post("/users", (req, res) => {
@@ -41,21 +35,15 @@ app.post("/users", (req, res) => {
     const {error, value: createParams} = userValidation(body);
 
     if(error){
-      res.status(400).send(error);
+      return res.status(400).send(error);
     }
 
 
     let user = new User(createParams);
 
-    user.save((err, user) => {
-        if(err){
-            console.log(err);
-        }
-
-        console.log("user saved", user);
-    });
-
-    res.send(user);
+    return user.save()
+    .then(() => res.send(user))
+    .catch((err) => res.status(500).send(err));
 });
 
 app.put("/users/:id", (req, res) => {
@@ -65,26 +53,20 @@ app.put("/users/:id", (req, res) => {
     const {error, value: updateParams} = userValidation(body);
 
     if(error){
-      res.status(400).send(error);
+      return res.status(400).send(error);
     }
 
-    User.findByIdAndUpdate(id, updateParams, {new: true},(err, result) => {
-        if(err) console.log(err);
-
-        res.send(result);
-    });
+    return User.findByIdAndUpdate(id, updateParams, {new: true})
+    .then((data) => res.send(data))
+    .catch((err) => res.status(500).send(err));
 });
 
 app.delete("/users/:id", (req, res) => {
     const {id} = req.params;
 
-    User.deleteOne({_id: id}, (err, result) => {
-        if(err){
-            console.log(err);
-        }
-
-        res.send(result);
-    });
+    return User.deleteOne({_id: id})
+    .then((deleted) => res.send(deleted))
+    .catch((err) => res.status(500).send(err));
 });
 
 app.listen(3000, () => {
