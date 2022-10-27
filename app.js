@@ -35,17 +35,14 @@ app.post("/users", (req, res) => {
     const {error, value: createParams} = userValidation(body);
 
     if(error){
-      res.status(400).send(error);
+      return res.status(400).send(error);
     }
 
 
     let user = new User(createParams);
 
     return user.save()
-    .then(() => {
-      console.log("User saved");
-      res.send(user);
-    })
+    .then(() => res.send(user))
     .catch((err) => res.status(500).send(err));
 });
 
@@ -56,7 +53,7 @@ app.put("/users/:id", (req, res) => {
     const {error, value: updateParams} = userValidation(body);
 
     if(error){
-      res.status(400).send(error);
+      return res.status(400).send(error);
     }
 
     return User.findByIdAndUpdate(id, updateParams, {new: true})
