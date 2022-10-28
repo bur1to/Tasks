@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("./models/user.js");
 const {userValidation} = require("./validations/dataValidation.js");
 const express = require("express");
+
 const app = express();
 
 app.use(express.json());
@@ -11,62 +12,78 @@ mongoose.connect("mongodb://localhost:27017/testDb", {useNewUrlParser: true, use
 .then(() => console.log("MongoDB succesfully connected"))
 .catch((err) => console.log(err));
 
-app.get("/users", (req, res) => {
-    return User.find()
-    .then((data) => res.send(data))
-    .catch((err) => res.status(500).send(err));
+app.get("/users", async (req, res) => {
+    try{
+      const data = await User.find();
+
+      res.send(data);
+    }catch(err){
+        res.status(500).send(err);
+    }
 });
 
-app.get("/users/:id", (req, res) => {
-    const {id} = req.params;
+app.get("/users/:id", async (req, res) => {
+    try{
+      const {id} = req.params;
+      const data = await User.findOne({_id: id});
 
-   return User.findOne({_id: id})
-    .then((data) => res.send(data))
-    .catch((err) => res.status(500).send(err));
+      res.send(data);
+    }catch(err){
+      res.status(500).send(err);
+    }
 });
 
-app.post("/users", (req, res) => {
-    if(!req.body){
+app.post("/users", async (req, res) => {
+    try{
+      const {body} = req;
+
+      if(!body){
         return res.sendStatus(400);
+      }
+
+      const {error, value: createParams} = userValidation(body);
+
+      if(error){
+        return res.status(400).send(error);
+      }
+
+      const user = await User.create(createParams);
+
+      res.send(user);
+    }catch(err){
+      res.status(500).send(err);
     }
-
-    const {body} = req;
-
-    const {error, value: createParams} = userValidation(body);
-
-    if(error){
-      return res.status(400).send(error);
-    }
-
-
-    let user = new User(createParams);
-
-    return user.save()
-    .then(() => res.send(user))
-    .catch((err) => res.status(500).send(err));
 });
 
-app.put("/users/:id", (req, res) => {
-    const {id} = req.params;
-    const {body} = req;
+app.put("/users/:id", async (req, res) => {
+    try{
+      const {id} = req.params;
+      const {body} = req;
 
-    const {error, value: updateParams} = userValidation(body);
+      const {error, value: updateParams} = userValidation(body);
 
-    if(error){
-      return res.status(400).send(error);
+      if(error){
+        return res.status(400).send(error);
+      }
+
+      const updateUser = await User.findByIdAndUpdate(id, updateParams, {new: true});
+
+      res.send(updateUser);
+    }catch(err){
+      res.status(500).send(err);
     }
-
-    return User.findByIdAndUpdate(id, updateParams, {new: true})
-    .then((data) => res.send(data))
-    .catch((err) => res.status(500).send(err));
 });
 
-app.delete("/users/:id", (req, res) => {
+app.delete("/users/:id", async (req, res) => {
+  try{
     const {id} = req.params;
 
-    return User.deleteOne({_id: id})
-    .then((deleted) => res.send(deleted))
-    .catch((err) => res.status(500).send(err));
+    const deleted = await User.deleteOne({_id: id});
+
+    res.send(deleted);
+  }catch(err){
+    res.status(500).send(err);
+  }
 });
 
 app.listen(3000, () => {
