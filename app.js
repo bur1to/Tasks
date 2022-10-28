@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("./models/user.js");
 const {userValidation} = require("./validations/dataValidation.js");
 const express = require("express");
+
 const app = express();
 
 app.use(express.json());
@@ -14,6 +15,7 @@ mongoose.connect("mongodb://localhost:27017/testDb", {useNewUrlParser: true, use
 app.get("/users", async (req, res) => {
     try{
       const data = await User.find();
+
       res.send(data);
     }catch(err){
         res.status(500).send(err);
@@ -24,6 +26,7 @@ app.get("/users/:id", async (req, res) => {
     try{
       const {id} = req.params;
       const data = await User.findOne({_id: id});
+
       res.send(data);
     }catch(err){
       res.status(500).send(err);
@@ -32,11 +35,11 @@ app.get("/users/:id", async (req, res) => {
 
 app.post("/users", async (req, res) => {
     try{
-      if(!req.body){
+      const {body} = req;
+
+      if(!body){
         return res.sendStatus(400);
       }
-
-      const {body} = req;
 
       const {error, value: createParams} = userValidation(body);
 
@@ -44,10 +47,10 @@ app.post("/users", async (req, res) => {
         return res.status(400).send(error);
       }
 
+      const user = await User.create(createParams);
+      // const createUser = await user.save();
 
-      let user = new User(createParams);
-      const createUser = await user.save();
-      res.send(createUser);
+      res.send(user);
     }catch(err){
       res.status(500).send(err);
     }
@@ -65,6 +68,7 @@ app.put("/users/:id", async (req, res) => {
       }
 
       const updateUser = await User.findByIdAndUpdate(id, updateParams, {new: true});
+
       res.send(updateUser);
     }catch(err){
       res.status(500).send(err);
@@ -76,6 +80,7 @@ app.delete("/users/:id", async (req, res) => {
     const {id} = req.params;
 
     const deleted = await User.deleteOne({_id: id});
+
     res.send(deleted);
   }catch(err){
     res.status(500).send(err);
