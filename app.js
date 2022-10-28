@@ -16,7 +16,7 @@ app.get("/users", async (req, res) => {
       const data = await User.find();
       res.send(data);
     }catch(err){
-        return res.status(500).send(err);
+        res.status(500).send(err);
     }
 });
 
@@ -26,7 +26,7 @@ app.get("/users/:id", async (req, res) => {
       const data = await User.findOne({_id: id});
       res.send(data);
     }catch(err){
-      return res.status(500).send(err);
+      res.status(500).send(err);
     }
 });
 
@@ -49,7 +49,7 @@ app.post("/users", async (req, res) => {
       const createUser = await user.save();
       res.send(createUser);
     }catch(err){
-      return res.status(500).send(err);
+      res.status(500).send(err);
     }
 });
 
@@ -67,7 +67,7 @@ app.put("/users/:id", async (req, res) => {
       const updateUser = await User.findByIdAndUpdate(id, updateParams, {new: true});
       res.send(updateUser);
     }catch(err){
-      return res.status(500).send(err);
+      res.status(500).send(err);
     }
 });
 
@@ -78,7 +78,7 @@ app.delete("/users/:id", async (req, res) => {
     const deleted = await User.deleteOne({_id: id});
     res.send(deleted);
   }catch(err){
-    return res.status(500).send(err);
+    res.status(500).send(err);
   }
 });
 
