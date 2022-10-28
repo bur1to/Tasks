@@ -1,91 +1,94 @@
-const mongoose = require("mongoose");
-const User = require("./models/user.js");
-const {userValidation} = require("./validations/dataValidation.js");
-const express = require("express");
+const mongoose = require('mongoose');
+const express = require('express');
+// const User = require('./models/user');
+// const { userValidation } = require('./validations/dataValidation');
+const userRouter = require('./routers/users');
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded());
 
-mongoose.connect("mongodb://localhost:27017/testDb", {useNewUrlParser: true, useUnifiedTopology: true})
-.then(() => console.log("MongoDB succesfully connected"))
-.catch((err) => console.log(err));
+mongoose.connect('mongodb://localhost:27017/testDb', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB succesfully connected'))
+  .catch((err) => console.log(err));
 
-app.get("/users", async (req, res) => {
-    try{
-      const data = await User.find();
+app.use('/users', userRouter);
 
-      res.send(data);
-    }catch(err){
-        res.status(500).send(err);
-    }
-});
+// app.get('/users', async (req, res) => {
+//     try{
+//       const data = await User.find();
 
-app.get("/users/:id", async (req, res) => {
-    try{
-      const {id} = req.params;
-      const data = await User.findOne({_id: id});
+//       res.send(data);
+//     }catch(err){
+//         res.status(500).send(err);
+//     }
+// });
 
-      res.send(data);
-    }catch(err){
-      res.status(500).send(err);
-    }
-});
+// app.get('/users/:id', async (req, res) => {
+//     try{
+//       const {id} = req.params;
+//       const data = await User.findOne({_id: id});
 
-app.post("/users", async (req, res) => {
-    try{
-      const {body} = req;
+//       res.send(data);
+//     }catch(err){
+//       res.status(500).send(err);
+//     }
+// });
 
-      if(!body){
-        return res.sendStatus(400);
-      }
+// app.post('/users', async (req, res) => {
+//     try{
+//       const {body} = req;
 
-      const {error, value: createParams} = userValidation(body);
+//       if(!body){
+//         return res.sendStatus(400);
+//       }
 
-      if(error){
-        return res.status(400).send(error);
-      }
+//       const {error, value: createParams} = userValidation(body);
 
-      const user = await User.create(createParams);
+//       if(error){
+//         return res.status(400).send(error);
+//       }
 
-      res.send(user);
-    }catch(err){
-      res.status(500).send(err);
-    }
-});
+//       const user = await User.create(createParams);
 
-app.put("/users/:id", async (req, res) => {
-    try{
-      const {id} = req.params;
-      const {body} = req;
+//       res.send(user);
+//     }catch(err){
+//       res.status(500).send(err);
+//     }
+// });
 
-      const {error, value: updateParams} = userValidation(body);
+// app.put('/users/:id', async (req, res) => {
+//     try{
+//       const {id} = req.params;
+//       const {body} = req;
 
-      if(error){
-        return res.status(400).send(error);
-      }
+//       const {error, value: updateParams} = userValidation(body);
 
-      const updateUser = await User.findByIdAndUpdate(id, updateParams, {new: true});
+//       if(error){
+//         return res.status(400).send(error);
+//       }
 
-      res.send(updateUser);
-    }catch(err){
-      res.status(500).send(err);
-    }
-});
+//       const updateUser = await User.findByIdAndUpdate(id, updateParams, {new: true});
 
-app.delete("/users/:id", async (req, res) => {
-  try{
-    const {id} = req.params;
+//       res.send(updateUser);
+//     }catch(err){
+//       res.status(500).send(err);
+//     }
+// });
 
-    const deleted = await User.deleteOne({_id: id});
+// app.delete('/users/:id', async (req, res) => {
+//   try{
+//     const {id} = req.params;
 
-    res.send(deleted);
-  }catch(err){
-    res.status(500).send(err);
-  }
-});
+//     const deleted = await User.deleteOne({_id: id});
+
+//     res.send(deleted);
+//   }catch(err){
+//     res.status(500).send(err);
+//   }
+// });
 
 app.listen(3000, () => {
-    console.log("server is start...");
+  console.log('server is start...');
 });
