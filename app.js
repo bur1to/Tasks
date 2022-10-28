@@ -48,7 +48,6 @@ app.post("/users", async (req, res) => {
       }
 
       const user = await User.create(createParams);
-      // const createUser = await user.save();
 
       res.send(user);
     }catch(err){
