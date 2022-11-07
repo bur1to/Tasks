@@ -1,5 +1,6 @@
 const User = require('../models/user');
-const { userValidation } = require('../validations/dataValidation');
+const { userCreateValidation } = require('../validations/dataValidation');
+const { userUpdateValidation } = require('../validations/dataValidation');
 
 const getUsers = (async (req, res, next) => {
   try {
@@ -31,7 +32,7 @@ const createUser = (async (req, res, next) => {
       throw new Error('Body required');
     }
 
-    const { value: createParams } = await userValidation(body);
+    const { value: createParams } = await userCreateValidation(body);
 
     const user = await User.create(createParams);
 
@@ -46,7 +47,7 @@ const updateUser = (async (req, res, next) => {
     const { id } = req.params;
     const { body } = req;
 
-    const { value: updateParams } = await userValidation(body);
+    const { value: updateParams } = await userUpdateValidation(body);
 
     const update = await User.findByIdAndUpdate(id, updateParams, { new: true });
 
