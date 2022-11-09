@@ -1,6 +1,6 @@
 const User = require('../models/user');
-const { userCreateValidation } = require('../validations/dataValidation');
-const { userUpdateValidation } = require('../validations/dataValidation');
+const { userCreateValidation } = require('../validations/usersValidation');
+const { userUpdateValidation } = require('../validations/usersValidation');
 
 const getUsers = (async (req, res, next) => {
   try {

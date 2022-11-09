@@ -23,4 +23,4 @@ const userUpdateValidation = (data) => {
 module.exports = {
   userCreateValidation,
   userUpdateValidation
-}
+};
