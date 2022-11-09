@@ -8,7 +8,7 @@ const getUsers = (async (req, res, next) => {
 
     res.json(data);
   } catch (err) {
-    next(new Error('Something went wrong!'));
+    next(err);
   }
 });
 
@@ -20,7 +20,7 @@ const getUser = (async (req, res, next) => {
 
     res.json(data);
   } catch (err) {
-    next(new Error('Something went wrong!'));
+    next(err);
   }
 });
 
@@ -38,7 +38,7 @@ const createUser = (async (req, res, next) => {
 
     res.json(user);
   } catch (err) {
-    next(new Error('Something went wrong!'));
+    next(err);
   }
 });
 
@@ -49,11 +49,11 @@ const updateUser = (async (req, res, next) => {
 
     const { value: updateParams } = await userUpdateValidation(body);
 
-    const update = await User.findByIdAndUpdate(id, updateParams, { new: true });
+    const updated = await User.findByIdAndUpdate(id, updateParams, { new: true });
 
-    res.json(update);
+    res.json(updated);
   } catch (err) {
-    next(new Error('Something went wrong!'));
+    next(err);
   }
 });
 
@@ -63,11 +63,9 @@ const deleteUser = (async (req, res, next) => {
 
     const deleted = await User.deleteOne({ _id: id });
 
-    next(new Error('Something went wrong!'));
-
     res.json(deleted);
   } catch (err) {
-    next(new Error('Something went wrong!'));
+    next(err);
   }
 });
 
