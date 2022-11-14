@@ -19,11 +19,11 @@ const getComment = (async (req, res, next) => {
 
     const data = await Comment.findOne({ _id: id });
 
-    if (data) {
-      res.send(data);
-    } else {
-      res.send('Comment do not exist!');
+    if (!data) {
+      throw new Error('User does not exist');
     }
+
+    res.send(data);
   } catch (err) {
     next(err);
   }
@@ -39,15 +39,17 @@ const createComment = (async (req, res, next) => {
 
     const { userId } = req.body;
 
-    if (User.findOne({ _id: userId })) {
-      const { value: createParams } = await commentCreateValidation(body);
+    const user = await User.findOne({ _id: userId });
 
-      const created = await Comment.create(createParams);
-
-      res.send(created);
-    } else {
-      res.send('User does not exist');
+    if (!user) {
+      throw new Error('User does not exist');
     }
+
+    const { value: createParams } = await commentCreateValidation(body);
+
+    const created = await Comment.create(createParams);
+
+    res.send(created);
   } catch (err) {
     next(err);
   }

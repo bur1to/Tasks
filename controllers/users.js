@@ -18,11 +18,11 @@ const getUser = (async (req, res, next) => {
 
     const data = await User.findOne({ _id: id });
 
-    if (data) {
-      res.send(data);
-    } else {
-      res.send('User does not exit!');
+    if (!data) {
+      throw new Error('User does not exit!');
     }
+
+    res.send(data);
   } catch (err) {
     next(err);
   }
