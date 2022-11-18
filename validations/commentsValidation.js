@@ -1,19 +1,19 @@
 const Joi = require('joi');
 
 const commentCreateValidation = (data) => {
-  const schema = Joi.object({
+  const createSchema = Joi.object({
     userId: Joi.string().required(),
     comment: Joi.string().min(3).max(255).required()
   });
-  return schema.validate(data);
+  return createSchema.validate(data);
 };
 
 const commentUpdateValidation = (data) => {
-  const schema = Joi.object({
+  const updateSchema = Joi.object({
     userId: Joi.string(),
     comment: Joi.string().min(3).max(255)
   });
-  return schema.validate(data);
+  return updateSchema.validate(data);
 };
 
 module.exports = {
