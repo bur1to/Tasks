@@ -1,4 +1,3 @@
-// const mongoose = require('mongoose');
 const Comment = require('../models/comment');
 const User = require('../models/user');
 const { commentCreateValidation, commentUpdateValidation } = require('../validations/commentsValidation');
@@ -45,9 +44,9 @@ const createComment = (async (req, res, next) => {
       throw new Error('User does not exist');
     }
 
-    const { value: createParams } = await commentCreateValidation(body);
+    const value = await commentCreateValidation(body);
 
-    const created = await Comment.create(createParams);
+    const created = await Comment.create(value);
 
     res.send(created);
   } catch (err) {
@@ -60,9 +59,9 @@ const updateComment = (async (req, res, next) => {
     const { id } = req.params;
     const { body } = req;
 
-    const { value: updateParams } = await commentUpdateValidation(body);
+    const value = await commentUpdateValidation(body);
 
-    const updated = await Comment.findByIdAndUpdate({ _id: id }, updateParams, { new: true });
+    const updated = await Comment.findByIdAndUpdate({ _id: id }, value, { new: true });
 
     res.send(updated);
   } catch (err) {

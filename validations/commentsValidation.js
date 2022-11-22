@@ -5,7 +5,7 @@ const commentCreateValidation = (data) => {
     userId: Joi.string().required(),
     comment: Joi.string().min(3).max(255).required()
   });
-  return createSchema.validate(data);
+  return createSchema.validateAsync(data);
 };
 
 const commentUpdateValidation = (data) => {
@@ -13,7 +13,7 @@ const commentUpdateValidation = (data) => {
     userId: Joi.string(),
     comment: Joi.string().min(3).max(255)
   });
-  return updateSchema.validate(data);
+  return updateSchema.validateAsync(data);
 };
 
 module.exports = {
