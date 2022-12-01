@@ -59,6 +59,14 @@ const updateComment = (async (req, res, next) => {
     const { id } = req.params;
     const { body } = req;
 
+    const { userId } = req.body;
+
+    const user = await User.findOne({ _id: userId });
+
+    if (!user) {
+      throw new Error('User does not exist');
+    }
+
     const value = await commentUpdateValidation(body);
 
     const updated = await Comment.findByIdAndUpdate({ _id: id }, value, { new: true });
