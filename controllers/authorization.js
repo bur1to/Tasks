@@ -10,7 +10,12 @@ const authorization = (async (req, res, next) => {
       throw new Error('Incorrect email or password');
     }
 
-    res.send(user.id);
+    const userData = {
+      id: user.id,
+      name: `${user.firstName} ${user.lastName}`
+    };
+
+    res.send(userData);
   } catch (err) {
     next(err);
   }
