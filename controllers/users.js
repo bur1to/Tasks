@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
 const { userCreateValidation, userUpdateValidation } = require('../validations/usersValidation');
 
 const getUsers = (async (req, res, next) => {
@@ -36,6 +37,9 @@ const createUser = (async (req, res, next) => {
     }
 
     const value = await userCreateValidation(body);
+    const salt = await bcrypt.genSalt(10);
+
+    value.password = await bcrypt.hash(value.password, salt);
 
     const user = await User.create(value);
 
