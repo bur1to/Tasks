@@ -6,6 +6,6 @@ const {
   authorization
 } = require('../controllers/authorization');
 
-router.get('/', authorization);
+router.post('/', authorization);
 
 module.exports = router;
