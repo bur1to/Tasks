@@ -1,5 +1,6 @@
 const User = require('../models/user');
-const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+const salt = '5d9afb187818d05848770d0c804a7f1f';
 
 const authorization = (async (req, res, next) => {
   try {
@@ -11,9 +12,9 @@ const authorization = (async (req, res, next) => {
       throw new Error('User with this email does not exist');
     }
 
-    const validPass = bcrypt.compare(body.password, user.password);
+   body.password = crypto.pbkdf2Sync(body.password, salt, 1000, 64, 'sha512').toString('hex');
 
-    if (!validPass) {
+    if (user.password !== body.password) {
       throw new Error('Invalid password');
     }
 

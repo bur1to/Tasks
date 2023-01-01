@@ -1,6 +1,7 @@
 const User = require('../models/user');
-const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const { userCreateValidation, userUpdateValidation } = require('../validations/usersValidation');
+const salt = '5d9afb187818d05848770d0c804a7f1f';
 
 const getUsers = (async (req, res, next) => {
   try {
@@ -37,9 +38,8 @@ const createUser = (async (req, res, next) => {
     }
 
     const value = await userCreateValidation(body);
-    const salt = await bcrypt.genSalt(10);
-
-    value.password = await bcrypt.hash(value.password, salt);
+    
+    value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
 
     const user = await User.create(value);
 
