@@ -5,6 +5,7 @@ const userSchema = mongoose.Schema({
   lastName: { type: String, minLength: 2, maxLength: 20 },
   email: { type: String, unique: true },
   password: { type: String, minLength: 5},
+  salt: { type: String },
   age: { type: Number, minLength: 1, maxLength: 120 }
 }, {
   collection: 'user',
