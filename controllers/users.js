@@ -38,7 +38,7 @@ const createUser = (async (req, res, next) => {
 
     const value = await userCreateValidation(body);
     const salt = crypto.randomBytes(16).toString('hex');
-    console.log(salt);
+
     value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
     value.salt = salt;
 
