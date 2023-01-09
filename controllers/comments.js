@@ -32,10 +32,6 @@ const createComment = (async (req, res, next) => {
   try {
     const { body } = req;
 
-    if (!body) {
-      throw new Error('Body required');
-    }
-
     const { userId } = req.body;
 
     const user = await User.findOne({ _id: userId });
