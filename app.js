@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const userRouter = require('./routers/users');
+const commentRouter = require('./routers/comments');
+const authRouter = require('./routers/authorization');
 
 const app = express();
 
@@ -12,6 +14,8 @@ mongoose.connect('mongodb://localhost:27017/testDb', { useNewUrlParser: true, us
   .catch((err) => console.log(err));
 
 app.use('/users', userRouter);
+app.use('/comment', commentRouter);
+app.use('/auth', authRouter);
 
 app.listen(3000, () => {
   console.log('server is start...');

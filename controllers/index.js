@@ -1,5 +1,9 @@
 const users = require('./users');
+const comments = require('./comments');
+const auth = require('./authorization');
 
 module.exports = {
-  users
+  users,
+  comments,
+  auth
 };

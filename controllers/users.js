@@ -1,6 +1,7 @@
 const User = require('../models/user');
-const { userCreateValidation } = require('../validations/usersValidation');
-const { userUpdateValidation } = require('../validations/usersValidation');
+const crypto = require('crypto');
+const { userCreateValidation, userUpdateValidation } = require('../validations/usersValidation');
+const salt = '5d9afb187818d05848770d0c804a7f1f';
 
 const getUsers = (async (req, res, next) => {
   try {
@@ -18,7 +19,11 @@ const getUser = (async (req, res, next) => {
 
     const data = await User.findOne({ _id: id });
 
-    res.json(data);
+    if (!data) {
+      throw new Error('User not found');
+    }
+
+    res.send(data);
   } catch (err) {
     next(err);
   }
@@ -32,9 +37,11 @@ const createUser = (async (req, res, next) => {
       throw new Error('Body required');
     }
 
-    const { value: createParams } = await userCreateValidation(body);
+    const value = await userCreateValidation(body);
+    
+    value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
 
-    const user = await User.create(createParams);
+    const user = await User.create(value);
 
     res.json(user);
   } catch (err) {
@@ -47,9 +54,9 @@ const updateUser = (async (req, res, next) => {
     const { id } = req.params;
     const { body } = req;
 
-    const { value: updateParams } = await userUpdateValidation(body);
+    const value = await userUpdateValidation(body);
 
-    const updated = await User.findByIdAndUpdate(id, updateParams, { new: true });
+    const updated = await User.findByIdAndUpdate(id, value, { new: true });
 
     res.json(updated);
   } catch (err) {
