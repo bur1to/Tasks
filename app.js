@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const userRouter = require('./routers/users');
-const commnetRouter = require('./routers/comments');
+const commentRouter = require('./routers/comments');
 const authRouter = require('./routers/authorization');
 
 const app = express();
@@ -14,7 +14,7 @@ mongoose.connect('mongodb://localhost:27017/testDb', { useNewUrlParser: true, us
   .catch((err) => console.log(err));
 
 app.use('/users', userRouter);
-app.use('/comment', commnetRouter);
+app.use('/comment', commentRouter);
 app.use('/auth', authRouter);
 
 app.listen(3000, () => {
