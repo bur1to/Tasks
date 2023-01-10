@@ -6,7 +6,7 @@ const userCreateValidation = (data) => {
     lastName: Joi.string().min(2).max(20).required(),
     email: Joi.string().email().required(),
     password: Joi.string().pattern(/^[a-zA-Z0-9!@#$%^&*]/).min(5).required(),
-    salt: Joi.string().required(),
+    salt: Joi.string(),
     age: Joi.number().min(1).max(120).required()
   });
 
