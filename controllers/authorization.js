@@ -12,9 +12,9 @@ const authorization = (async (req, res, next) => {
     }
 
     const salt = user.salt;
-    body.password = crypto.pbkdf2Sync(body.password, salt, 1000, 64, 'sha512').toString('hex');
+    const hashedPassword = crypto.pbkdf2Sync(body.password, salt, 1000, 64, 'sha512').toString('hex');
 
-    if (user.password !== body.password) {
+    if (user.password !== hashedPassword) {
       throw new Error('Incorrect email or password');
     }
 
