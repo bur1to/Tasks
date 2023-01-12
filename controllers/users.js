@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const crypto = require('crypto');
 const { userCreateValidation, userUpdateValidation } = require('../validations/usersValidation');
+const isEmpty = require('lodash.isempty');
 
 const getUsers = (async (req, res, next) => {
   try {
@@ -55,11 +56,14 @@ const updateUser = (async (req, res, next) => {
     const { id } = req.params;
     const { body } = req;
 
-    const value = await userUpdateValidation(body);
-    const salt = crypto.randomBytes(16).toString('hex');
-    
-    value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
-    value.salt = salt;
+    const value = await userUpdateValidation(body); 
+   
+    if (!isEmpty(body.password)) {
+      const salt = crypto.randomBytes(16).toString('hex');
+
+      value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
+      value.salt = salt;
+    }
 
     const updated = await User.findByIdAndUpdate(id, value, { new: true });
 
