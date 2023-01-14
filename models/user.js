@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+mongoose.set('strictQuery', true);
 
 const userSchema = mongoose.Schema({
   firstName: { type: String, minLength: 2, maxLength: 20 },
