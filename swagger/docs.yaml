@@ -73,23 +73,23 @@ paths:
              application/json:
                schema:
                  $ref: '#/components/schemas/ErrorResponse'
-     put:
-      description: Update exist user
-      operationId: updateUser
-      parameters:
-        - name: id
-          description: User id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
+   put:
+     description: Update exist user
+     operationId: updateUser
+     parameters:
+       - name: id
+         description: User id
+         in: path
+         required: true
+         schema:
+           type: string
+     requestBody:
         description: Update user
         content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserUpdate'
-      responses:
+     responses:
         '200':
           description: Successful operation
           content:
@@ -102,17 +102,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-     delete:
-      description: Delete user
-      operationId: deleteUser
-      parameters:
-        - name: id
-          description: User id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
+   delete:
+     description: Delete user
+     operationId: deleteUser
+     parameters:
+       - name: id
+         description: User id
+         in: path
+         required: true
+         schema:
+           type: string
+     responses:
         '200': 
           description: Successful operation
           content:
