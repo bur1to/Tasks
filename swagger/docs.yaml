@@ -9,18 +9,18 @@ paths:
   /users:
    x-swagger-router-controllers: users
    get:
-    description: Get all users
-    operationId: getUsers
-    responses:
+     description: Get all users
+     operationId: getUsers
+     responses:
       '200':
-        description: Successful operation
-        content:
-         application/json:
-          schema:
-            type: array
-          items: 
-             $ref: '#/components/schemas/User'
-        '500':
+         description: Successful operation
+         content:
+          application/json:
+           schema:
+             type: array
+             items: 
+                $ref: '#/components/schemas/User'
+      '500':
           description: Error
           content:
            application/json:
@@ -299,8 +299,6 @@ components:
     UserPost:
      type: object
      properties:
-      id:
-       type: string
       firstName:
        type: string
       lastName: 
@@ -308,8 +306,6 @@ components:
       email:
        type: string
       password: 
-       type: string
-      salt:
        type: string
       age:
        type: integer
