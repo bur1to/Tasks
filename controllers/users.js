@@ -1,7 +1,6 @@
-const User = require('../models/user');
 const crypto = require('crypto');
+const User = require('../models/user');
 const { userCreateValidation, userUpdateValidation } = require('../validations/usersValidation');
-const salt = '5d9afb187818d05848770d0c804a7f1f';
 
 const getUsers = (async (req, res, next) => {
   try {
@@ -37,11 +36,13 @@ const createUser = (async (req, res, next) => {
       throw new Error('Body required');
     }
 
-    const value = await userCreateValidation(body);
-    
-    value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
+    const createParams = await userCreateValidation(body);
+    const salt = crypto.randomBytes(16).toString('hex');
 
-    const user = await User.create(value);
+    createParams.password = crypto.pbkdf2Sync(createParams.password, salt, 1000, 64, 'sha512').toString('hex');
+    createParams.salt = salt;
+
+    const user = await User.create(createParams);
 
     res.json(user);
   } catch (err) {
@@ -54,9 +55,16 @@ const updateUser = (async (req, res, next) => {
     const { id } = req.params;
     const { body } = req;
 
-    const value = await userUpdateValidation(body);
+    const updateParams = await userUpdateValidation(body);
 
-    const updated = await User.findByIdAndUpdate(id, value, { new: true });
+    if (body.password) {
+      const salt = crypto.randomBytes(16).toString('hex');
+
+      updateParams.password = crypto.pbkdf2Sync(updateParams.password, salt, 1000, 64, 'sha512').toString('hex');
+      updateParams.salt = salt;
+    }
+
+    const updated = await User.findByIdAndUpdate(id, updateParams, { new: true });
 
     res.json(updated);
   } catch (err) {
