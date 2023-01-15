@@ -1,11 +1,11 @@
-const User = require('../models/user');
 const crypto = require('crypto');
+const User = require('../models/user');
 
 const authorization = (async (req, res, next) => {
   try {
     const { body } = req;
 
-    const user = await User.findOne({ email: body.email});
+    const user = await User.findOne({ email: body.email });
 
     if (!user) {
       throw new Error('Incorrect email or password');
