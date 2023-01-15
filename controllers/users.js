@@ -57,7 +57,7 @@ const updateUser = (async (req, res, next) => {
 
     const updateParams = await userUpdateValidation(body);
 
-    if (!body.password) {
+    if (body.password) {
       const salt = crypto.randomBytes(16).toString('hex');
 
       updateParams.password = crypto.pbkdf2Sync(updateParams.password, salt, 1000, 64, 'sha512').toString('hex');
