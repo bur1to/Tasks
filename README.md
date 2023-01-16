@@ -2,7 +2,7 @@
 
 This is my base project what can create users and comments with authorization 
 
-# Techology
+# Technology
 
 This project use this technologies(version not less then written):
 1. express ^4.18.1
