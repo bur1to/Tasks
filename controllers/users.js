@@ -41,7 +41,6 @@ const createUser = (async (req, res, next) => {
 
     createParams.password = crypto.pbkdf2Sync(createParams.password, salt, 1000, 64, 'sha512').toString('hex');
     createParams.salt = salt;
-
     const user = await User.create(createParams);
 
     res.json(user);

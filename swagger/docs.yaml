@@ -1,0 +1,371 @@
+openapi: 3.0.0
+info:
+  title: JavaScript base project
+  description: This is base project what can create users and comments with authorization
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /users:
+   x-swagger-router-controllers: users
+   get:
+     description: Get all users
+     operationId: getUsers
+     responses:
+      '200':
+         description: Successful operation
+         content:
+          application/json:
+           schema:
+             type: array
+             items: 
+                $ref: '#/components/schemas/User'
+      '500':
+          description: Error
+          content:
+           application/json:
+            schema: 
+             $ref: '#/components/schemas/ErrorResponse'
+   post:
+     description: Create new user
+     operationId: createUser
+     requestBody:
+       description: Create a new user in the collection
+       content:
+          application/json:
+           schema:
+             $ref: '#/components/schemas/UserPost'
+       required: true
+     responses:
+       '200':
+         description: Successful operation
+         content:
+           application/json:
+             schema:
+              $ref: '#/components/schemas/GeneralResponse'
+       '400':
+         description: Invalid input
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/ErrorResponse'
+  /users/{id}:
+   x-swagger-router-controllers: users
+   get:
+     description: Get user by id
+     operationId: getUser
+     parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+     responses:
+       '200':
+         description: Successful operation
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/User'
+         '500':
+           description: Error
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/ErrorResponse'
+   put:
+     description: Update exist user
+     operationId: updateUser
+     parameters:
+       - name: id
+         description: User id
+         in: path
+         required: true
+         schema:
+           type: string
+     requestBody:
+        description: Update user
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserUpdate'
+     responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+   delete:
+     description: Delete user
+     operationId: deleteUser
+     parameters:
+       - name: id
+         description: User id
+         in: path
+         required: true
+         schema:
+           type: string
+     responses:
+        '200': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralResponse'
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /comments:
+   x-swagger-router-controllers: comments  
+   get:
+      description: Get all comments
+      operationId: getComments
+      responses:
+        '200':
+          description: Successful operation
+          content:
+           application/json:
+            schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Comment'
+        '500':
+          description: Error
+          content:
+           application/json:
+            schema: 
+             $ref: '#/components/schemas/ErrorResponse'
+   post:
+      description: Create new comment
+      operationId: createComment
+      requestBody:
+        description: Create a new comment in the collection
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/GeneralResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /comments/{id}:
+    x-swagger-router-controllers: comments
+    get:
+      description: Get comment by id
+      operationId: getComment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      description: Update exist comment
+      operationId: updateComment
+      parameters:
+        - name: id
+          description: Comment id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update comment
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentUpdate'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      description: Delete user
+      operationId: deleteComment
+      parameters:
+        - name: id
+          description: User id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200': 
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralResponse'
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth:
+    x-swagger-router-controllers: authorization
+    post:
+      description: Authorization
+      operationId: authorization
+      requestBody:
+        description: Authorization properties
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authorization'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/GeneralResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    User:
+     type: object
+     properties:
+       id: 
+         type: string
+       firstName:
+         type: string
+       lastName: 
+         type: string
+       email:
+         type: string
+       password:
+         type: string
+       salt: 
+         type: string
+       age: 
+         type: integer
+     required:
+       - id
+       - firstName
+       - lastName
+       - email
+       - password
+       - salt
+       - age
+    UserPost:
+     type: object
+     properties:
+      firstName:
+       type: string
+      lastName: 
+       type: string
+      email:
+       type: string
+      password: 
+       type: string
+      age:
+       type: integer
+     required:
+       - firstName
+       - lastName
+       - email
+       - password
+       - age
+    UserUpdate:
+     type: object
+     properties:
+       firstName:
+         type: string
+       lastName: 
+         type: string
+       email:
+         type: string
+       password:
+         type: string
+       age: 
+         type: integer
+    Comment:
+     type: object
+     properties: 
+      userId:
+       type: string
+      comment:
+       type: string
+     required:
+      - userId
+      - comment
+    CommentUpdate:
+     type: object
+     properties:
+      userId:
+       type: string
+      comment:
+       type: string
+    Authorization:
+     type: object
+     properties:
+      email:
+       type: string
+      password:
+       type: string
+     required:
+      - email
+      - password
+    GeneralResponse:
+     type: object
+     properties: 
+       message: 
+         type: string
+     required:
+       - message
+    ErrorResponse:
+     type: object
+     properties:
+       message:
+         type: string
+     required:
+       - message
