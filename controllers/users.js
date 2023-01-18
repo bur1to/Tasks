@@ -4,7 +4,12 @@ const { userCreateValidation, userUpdateValidation } = require('../validations/u
 
 const getUsers = (async (req, res, next) => {
   try {
-    const data = await User.find();
+    const data = await User.find({}, {
+      firstName: 1,
+      lastName: 1,
+      email: 1,
+      age: 1
+    });
 
     res.json(data);
   } catch (err) {
@@ -16,7 +21,12 @@ const getUser = (async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const data = await User.findOne({ _id: id });
+    const data = await User.findOne({ _id: id }, {
+      firstName: 1,
+      lastName: 1,
+      email: 1,
+      age: 1
+    });
 
     if (!data) {
       throw new Error('User not found');
