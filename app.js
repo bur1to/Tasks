@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded());
 
-mongoose.connect('mongodb://172.17.0.2/testDb', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://172.18.0.2:27017/testDb', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB succesfully connected'))
   .catch((err) => console.log(err));
 
