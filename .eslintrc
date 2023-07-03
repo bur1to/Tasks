@@ -4,6 +4,7 @@
     "comma-dangle": [
       "error",
       "never"
-    ]
+    ],
+    "import/no-unresolved": false
   }
 }
