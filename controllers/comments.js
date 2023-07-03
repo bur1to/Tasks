@@ -1,12 +1,33 @@
 const Comment = require('../models/comment');
 const User = require('../models/user');
-const { commentCreateValidation, commentUpdateValidation } = require('../validations/commentsValidation');
+const { commentCreateValidation, commentUpdateValidation, commentGetValidation } = require('../validations/commentsValidation');
 
 const getComments = (async (req, res, next) => {
   try {
-    const data = await Comment.find();
+    const { query } = req;
+    const {
+      page,
+      limit,
+      sort,
+      sortBy
+    } = await commentGetValidation(query);
 
-    res.send(data);
+    const sortOrder = sortBy === 'asc' ? 1 : -1;
+
+    const count = await Comment.countDocuments();
+    const data = await Comment.find({}, {
+      comment: 1
+    }).sort({ [sort]: sortOrder })
+      .skip(page * limit)
+      .limit(limit)
+      .lean();
+
+    const result = {
+      data,
+      count
+    };
+
+    res.send(result);
   } catch (err) {
     next(err);
   }

@@ -16,7 +16,19 @@ const commentUpdateValidation = (data) => {
   return updateSchema.validateAsync(data);
 };
 
+const commentGetValidation = (data) => {
+  const getValidation = Joi.object({
+    page: Joi.number().default(0),
+    limit: Joi.number().default(5),
+    sort: Joi.string().allow('firstName', 'lastName', 'email', 'age').default('firstName'),
+    sortBy: Joi.string().allow('asc', 'desc').default('asc')
+  });
+
+  return getValidation.validateAsync(data);
+};
+
 module.exports = {
   commentCreateValidation,
-  commentUpdateValidation
+  commentUpdateValidation,
+  commentGetValidation
 };
