@@ -7,6 +7,14 @@ services:
       - 3000:3000
     volumes:
       - ./:/code
+  
+  client:
+    build: ../Tasks-UI/client/app
+    ports:
+      - 8080:8080
+    volumes:
+      - ../Tasks-UI/client/app:/app2
+      - /app2/node_modules
 
   mongodb:
     image: mongo:latest
