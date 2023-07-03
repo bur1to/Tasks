@@ -1,17 +1,36 @@
 const crypto = require('crypto');
 const User = require('../models/user');
-const { userCreateValidation, userUpdateValidation } = require('../validations/usersValidation');
+const { userCreateValidation, userUpdateValidation, userGetValidation } = require('../validations/usersValidation');
 
 const getUsers = (async (req, res, next) => {
   try {
-    const data = await User.find({}, {
+    const { query } = req;
+    const {
+      page,
+      limit,
+      sort,
+      sortBy
+    } = await userGetValidation(query);
+
+    const sortOrder = sortBy === 'asc' ? 1 : -1;
+
+    const count = await User.countDocuments();
+    const users = await User.find({}, {
       firstName: 1,
       lastName: 1,
       email: 1,
       age: 1
-    });
+    }).sort({ [sort]: sortOrder })
+      .skip(page * limit)
+      .limit(limit)
+      .lean();
 
-    res.json(data);
+    const result = {
+      users,
+      count
+    };
+
+    res.json(result);
   } catch (err) {
     next(err);
   }
