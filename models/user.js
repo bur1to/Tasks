@@ -11,7 +11,7 @@ const userSchema = mongoose.Schema({
   salt: { type: String },
   age: { type: Number, minLength: 1, maxLength: 120 }
 }, {
-  collection: 'user',
+  collection: 'users',
   versionKey: false
 });
 

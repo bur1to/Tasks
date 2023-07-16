@@ -15,12 +15,12 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/testDb', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://172.19.0.3:27017/testDb', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB succesfully connected'))
   .catch((err) => console.log(err));
 
 app.use('/users', userRouter);
-app.use('/comment', commentRouter);
+app.use('/comments', commentRouter);
 app.use('/auth', authRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
